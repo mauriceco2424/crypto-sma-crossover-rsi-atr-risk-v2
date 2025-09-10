@@ -1,6 +1,6 @@
-# Trading Strategy Framework Skeleton
+# Crypto SMA Crossover + RSI + ATR Risk Trading Strategy
 
-A production-ready framework for building, backtesting, and optimizing trading strategies using Claude Code agents and a sophisticated pipeline architecture.
+A production-ready backtesting framework implementing a systematic crypto trading strategy that combines Simple Moving Average crossovers, RSI momentum filtering, and ATR-based risk management for volatile cryptocurrency markets.
 
 ## 🚀 Quick Start
 
@@ -13,45 +13,25 @@ A production-ready framework for building, backtesting, and optimizing trading s
 1. **Development Environment Setup**:
    > ⚠️ **Important**: Run steps 2-4 in **command prompt/terminal** (not VS Code/Cursor) to avoid file locking issues during folder/workspace renaming. After `/initialize` completes, open the renamed workspace file in your IDE.
 
-2. **Clone Skeleton**:
-   cd into the folder where you want to setup your strat
+2. **Clone Strategy**:
    ```bash
-   git clone https://github.com/mauriceco2424/trading_bot_skeleton.git
-   cd trading_bot_skeleton
+   git clone https://github.com/mauriceco2424/crypto-sma-crossover-rsi-atr-risk-v2.git
+   cd crypto-sma-crossover-rsi-atr-risk-v2
    ```
 
-3. **Define Your Strategy**:
-   Edit `docs/SMR.md` following the `docs/guides/STRAT_TEMPLATE.md` format.
-   **Key**: Update the `**Name**: <Strategy Name>` field with your actual strategy name.
-
-4. **Initialize Your Strategy Project**:
+3. **Open Strategy in IDE**:
    ```bash
-   /initialize
-   ```
-   This **automatically**:
-   - Reads strategy name from `docs/SMR.md` (e.g., "RSI Momentum Strategy")
-   - Creates GitHub repository: `your-strategy`
-   - Renames folder `trading_bot_skeleton` → `your-strategy`  
-   - Updates workspace file: `your-strategy.code-workspace`
-   - Updates all files with your strategy name
-   - Sets up clean git repository with remote origin
-   - Makes initial commit and pushes to GitHub
-
-   **No manual GitHub repo creation needed!**
-
-5. **Open Your Strategy in IDE**:
-   ```bash
-   # Open the renamed workspace file in VS Code/Cursor
-   code {strategy-name}.code-workspace
+   # Open the workspace file in VS Code/Cursor  
+   code crypto-sma-crossover-rsi-atr-risk-v2.code-workspace
    ```
 
-6. **Setup Dependencies and Validation**:
+4. **Setup Dependencies and Validation**:
    ```bash
    /validate-setup
    ```
    (This automatically runs `pip install -r requirements.txt` if dependencies are missing)
 
-7. **Build and Test Your Strategy**:
+5. **Build and Test Your Strategy**:
    ```bash
    /validate-strategy && /plan-strategy && /build-engine
    /run && /analyze-single-run && /evaluate-single-run

@@ -27,7 +27,9 @@
       "Bash(where git)",
       "Bash(git stash:*)",
       "Bash(git --version)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "ask": []
