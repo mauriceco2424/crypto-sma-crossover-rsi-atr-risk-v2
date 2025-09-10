@@ -106,7 +106,8 @@ I need to use the **trading-single-evaluator** agent to perform comprehensive pe
 
 - **LaTeX Quality Standards**:
   - Professional financial report formatting (MiKTeX available ✓)
-  - Proper figure integration from analyzer's visualizations
+  - **MANDATORY figure integration**: All reports MUST include main_analysis.png for visual validation
+  - Use `\includegraphics[width=\textwidth]{main_analysis.png}` in Performance Analysis section
   - Scientific writing with clear methodology sections
   - Publication-ready typography and layout
 

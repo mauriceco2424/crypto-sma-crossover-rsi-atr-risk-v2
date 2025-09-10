@@ -30,6 +30,7 @@ try:
     from .utils.config_parser import ConfigParser
     from .utils.progress_tracker import ProgressTracker
     from .utils.validators import DataValidator
+    from .utils.logging_config import setup_logging, QuietProgressTracker
     from .strategy_engine import GeneratedStrategy
 except ImportError:
     # Absolute imports for direct execution
@@ -67,8 +68,37 @@ class BacktestEngine:
             config_path: Path to parameter configuration file
         """
         self.logger = setup_logging(__name__)
-        self.config_parser = ConfigParser()
-        self.config = self.config_parser.parse_config(config_path)
+        
+        # Handle different config formats
+        if config_path == "parameter_config.md":
+            # Convert markdown config to JSON format
+            import subprocess
+            import sys
+            import json
+            from pathlib import Path
+            
+            try:
+                # Run conversion script
+                result = subprocess.run([
+                    sys.executable, 'scripts/utils/convert_config.py'
+                ], capture_output=True, text=True, cwd=Path.cwd())
+                
+                if result.returncode != 0:
+                    raise RuntimeError(f"Config conversion failed: {result.stderr}")
+                
+                # Load converted config
+                with open('temp_config.json', 'r') as f:
+                    self.config = json.load(f)
+                
+                self.logger.info("Successfully converted parameter_config.md to JSON format")
+                
+            except Exception as e:
+                self.logger.error(f"Failed to convert config: {e}")
+                raise
+        else:
+            # Use standard parser for other formats
+            self.config_parser = ConfigParser()
+            self.config = self.config_parser.parse_config(config_path)
         
         # Initialize components
         self.data_fetcher = DataFetcher(self.config)
@@ -142,12 +172,37 @@ class BacktestEngine:
     
     def _prepare_data(self) -> None:
         """Fetch and process all required data."""
+        # Get universe symbols dynamically if not provided
+        if 'symbols' not in self.config['universe']:
+            self.logger.info("Getting available symbols from exchange...")
+            quote_currency = self.config['universe'].get('base_currency', 'USDT')
+            all_symbols = self.data_fetcher.get_available_symbols()
+            
+            # Filter for quote currency pairs (e.g., USDT pairs)
+            filtered_symbols = [s for s in all_symbols if s.endswith(quote_currency)]
+            
+            # Apply exclusion filters
+            if self.config['universe'].get('exclude_stablecoins', True):
+                stablecoins = ['USDT', 'USDC', 'BUSD', 'DAI', 'TUSD', 'PAX', 'USDN']
+                filtered_symbols = [s for s in filtered_symbols 
+                                  if not any(stable in s.replace(quote_currency, '') 
+                                           for stable in stablecoins)]
+            
+            if self.config['universe'].get('exclude_leveraged', True):
+                leverage_tokens = ['UP', 'DOWN', 'BEAR', 'BULL', '3L', '3S']
+                filtered_symbols = [s for s in filtered_symbols 
+                                  if not any(lev in s for lev in leverage_tokens)]
+            
+            self.config['universe']['symbols'] = filtered_symbols
+            self.logger.info(f"Found {len(filtered_symbols)} symbols matching universe criteria")
+        
         # Fetch raw OHLCV data
+        timeframe = self.config['universe'].get('timeframe', '1d')
         self.ohlcv_data = self.data_fetcher.fetch_historical_data(
             symbols=self.config['universe']['symbols'],
             start_date=self.config['backtest']['start_date'],
             end_date=self.config['backtest']['end_date'],
-            timeframe=self.config['timeframe']
+            timeframe=timeframe
         )
         
         # Process and validate data

@@ -189,6 +189,20 @@ class PortfolioManager:
         """
         positions_value = self.get_positions_value()
         
+        # **ENHANCED VALIDATION**: Real-time accounting validation
+        calculated_total_return = (self.total_equity / self.initial_capital - 1.0) * 100
+        expected_equity = self.initial_capital + self.realized_pnl + self.unrealized_pnl - self.total_fees_paid
+        equity_discrepancy = abs(self.total_equity - expected_equity)
+        
+        # Real-time validation flag for critical errors
+        validation_warning = None
+        if equity_discrepancy > (self.initial_capital * 0.01):  # >1% discrepancy
+            validation_warning = f"ACCOUNTING_ERROR_{equity_discrepancy/self.initial_capital*100:.1f}pct_discrepancy"
+        
+        open_positions_count = len([p for p in self.positions.values() if p['quantity'] != 0])
+        if open_positions_count > 5:
+            validation_warning = f"HIGH_OPEN_POSITIONS_{open_positions_count}_trades"
+        
         return {
             'cash': self.cash,
             'positions_value': positions_value,
@@ -198,9 +212,14 @@ class PortfolioManager:
             'unrealized_pnl': self.unrealized_pnl,
             'total_fees_paid': self.total_fees_paid,
             'positions': deepcopy(self.positions),
-            'total_return': (self.total_equity / self.initial_capital - 1.0) * 100,
-            'open_positions_count': len([p for p in self.positions.values() if p['quantity'] != 0]),
-            'daily_return': self._calculate_daily_return() if self.equity_history else 0.0
+            'total_return': calculated_total_return,
+            'open_positions_count': open_positions_count,
+            'daily_return': self._calculate_daily_return() if self.equity_history else 0.0,
+            # **ENHANCED VALIDATION FIELDS**
+            'expected_equity': expected_equity,
+            'equity_discrepancy': equity_discrepancy,
+            'validation_warning': validation_warning,
+            'accounting_verified': equity_discrepancy <= (self.initial_capital * 0.01)
         }
     
     def get_performance_metrics(self) -> Dict[str, float]:

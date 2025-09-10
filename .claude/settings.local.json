@@ -29,7 +29,19 @@
       "Bash(git --version)",
       "Bash(gh:*)",
       "Bash(git remote set-url:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(git checkout:*)",
+      "Bash(test:*)",
+      "Bash(where:*)",
+      "Bash(pip install:*)",
+      "Bash(tr:*)",
+      "Bash(echo $PATH)",
+      "Bash(grep:*)",
+      "Bash(awk:*)",
+      "Bash(systeminfo)",
+      "Bash(mpm --install grfext)",
+      "Bash(mpm --install=graphics-def)",
+      "Bash(mpm --update)"
     ],
     "deny": [],
     "ask": []
