@@ -25,7 +25,9 @@
       "Bash(touch:*)",
       "Bash(rm:*)",
       "Bash(where git)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git --version)",
+      "Bash(gh:*)"
     ],
     "deny": [],
     "ask": []
