@@ -133,14 +133,14 @@ Each day at the close, the strategy builds an eligible universe of Binance USDT 
 ---
 
 ## Checklist (must be ticked before running)
-- [ ] Market/Universe defined  
-- [ ] Asset Selection method specified  
-- [ ] Timeframe specified  
-- [ ] Entry logic (markers, parameters, condition, trigger time, execution) defined  
-- [ ] Exit logic (markers, parameters, condition, collisions, execution) defined  
-- [ ] **Portfolio Accounting Mode chosen**  
-- [ ] **Position Sizing Strategy chosen**  
-- [ ] Data Requirements specified  
-- [ ] Filters & Eligibility defined  
-- [ ] Conflict Handling defined  
-- [ ] (Optional) Visualization/Analysis preferences considered
+- [x] Market/Universe defined  
+- [x] Asset Selection method specified  
+- [x] Timeframe specified  
+- [x] Entry logic (markers, parameters, condition, trigger time, execution) defined  
+- [x] Exit logic (markers, parameters, condition, collisions, execution) defined  
+- [x] **Portfolio Accounting Mode chosen**  
+- [x] **Position Sizing Strategy chosen**  
+- [x] Data Requirements specified  
+- [x] Filters & Eligibility defined  
+- [x] Conflict Handling defined  
+- [x] (Optional) Visualization/Analysis preferences considered
