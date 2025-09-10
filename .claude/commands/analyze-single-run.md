@@ -79,10 +79,14 @@ Create publication-quality figures in `/data/runs/{run_id}/figs/`:
 - **Trade Period Visualization**: Shaded spans for open positions
 - **Professional Quality**: 300+ DPI, colorblind-friendly, SVG + PNG formats
 
-### 4. **Embedded Validation & Quality Checks**
+### 4. **Enhanced Validation & Quality Checks (MANDATORY)**
+- **CRITICAL: Accounting Reconciliation**: Verify `final_equity ≈ initial_capital × (1 + total_return)` within 1% tolerance - HALT if mismatch
+- **Open Position Handling**: Include unrealized P&L for any open positions at period end - mark-to-market at closing prices
+- **Multi-Source Consistency**: Verify series.csv final equity matches metrics.json calculation exactly
+- **Open Position Flagging**: If >5 positions open at end or >20% capital unrealized → add prominent warning
 - **No Lookahead Validation**: Verify all features use data ≤ t for actions at t+1
 - **Accounting Identity**: Confirm `Equity_{t+1} = Equity_t + realizedPnL - fees`
-- **Sanity Thresholds**: Flag extreme ratios (Sortino >3, zero drawdown periods)
+- **Sanity Thresholds**: Flag extreme ratios (Sortino >3, zero drawdown periods)  
 - **Data Quality**: UTC timestamps, no duplicates, non-negative prices/volumes
 - **Execution Realism**: Validate trade execution feasibility and liquidity
 
@@ -129,10 +133,19 @@ Create publication-quality figures in `/data/runs/{run_id}/figs/`:
 - **Ready for evaluation** with `/evaluate-single-run`
 
 ## Success Criteria
-- All validation checks pass without critical errors
+- **MANDATORY**: Accounting reconciliation passes - final equity consistent with reported returns within 1% tolerance
+- **MANDATORY**: Open position assessment completed - any unrealized P&L properly included in calculations
+- **MANDATORY**: Multi-source consistency verified - series.csv, metrics.json, and visualizations are consistent
+- All enhanced validation checks pass without critical errors
 - Professional visualizations generated successfully
-- Comprehensive metrics calculated and validated
+- Comprehensive metrics calculated and validated  
 - No critical anomalies detected in analysis
 - All artifacts ready for evaluator consumption
+
+## Halt Conditions (Do NOT Proceed to Registry Update)
+- Accounting mismatch >1% between final equity calculation and reported returns
+- Open positions at period end with unrealized P&L not properly included
+- Inconsistency between series.csv final equity and metrics.json calculation
+- Any critical validation failure that affects performance accuracy
 
 Please use the trading-single-analyzer agent to perform comprehensive data analysis with embedded validation and professional visualization generation.

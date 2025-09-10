@@ -136,6 +136,25 @@ Source & cache declared in EMR; OHLCV in UTC; define missing-bar policy; fees/sl
 * Accounting: `Equity_{t+1} = Equity_t + realizedPnL − fees`
 * Determinism; sanity flags (e.g., extreme Sortino, zero DD)
 
+## Enhanced Validation Framework (MANDATORY)
+
+**Universal Accounting Identity Gate (All Agents):**
+* **VERIFY**: `Equity_final = Equity_initial + Sum(realized_PnL) + Sum(unrealized_PnL) - Sum(fees)`
+* **CROSS-CHECK**: Visual equity curve direction matches reported return sign
+* **RECONCILE**: `final_equity ≈ initial_capital × (1 + total_return)` within 1% tolerance
+
+**Critical Red Flags (Immediate Escalation):**
+* Positive metrics with declining equity chart → HALT, escalate to Builder
+* Large unrealized losses not reflected in total return → FLAG for review  
+* Final equity calculation doesn't reconcile with reported performance → STOP
+* Open positions at period end without proper mark-to-market → WARN
+
+**Mandatory Quality Gates:**
+* **Visual-Numerical Consistency**: Equity visualization must match metrics direction
+* **Open Position Disclosure**: >5 open trades or >20% unrealized capital requires explicit flagging
+* **Multi-Source Validation**: series.csv, metrics.json, and visualizations must be consistent
+* **Accounting Reconciliation**: All data sources must reconcile within 1% tolerance
+
 ## Progress Bar Standards
 
 * **Python Scripts**: All must use unified progress libraries (tqdm, rich, progressbar2) with ETA
@@ -174,6 +193,8 @@ Source & cache declared in EMR; OHLCV in UTC; define missing-bar policy; fees/sl
 **Single-Run Registry:**
 * Single-Analyzer appends `/docs/runs/run_registry.csv` per individual run
 * Each row tracks single backtest execution with performance metrics
+* **Enhanced validation tracking**: `accounting_verified`, `open_positions_end`, `unrealized_pnl_impact`, `validation_warnings`
+* **Quality assurance**: Registry entry only created if all validation gates pass
 
 **Optimization Registry:**
 * Optimizer appends `/docs/optimization/optimization_registry.csv` per parameter study

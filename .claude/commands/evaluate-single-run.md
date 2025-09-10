@@ -11,9 +11,36 @@ I need to use the **trading-single-evaluator** agent to perform comprehensive pe
 ## Run Evaluation Parameters
 - **Run ID**: $ARGUMENTS (defaults to most recent run if not specified)
 
+## CRITICAL VALIDATION REQUIREMENTS (MANDATORY - Execute First)
+
+### **Pre-Evaluation Visual Validation Protocol**
+**BEFORE ANY PERFORMANCE ASSESSMENT, the evaluator MUST:**
+
+1. **Read and analyze main_analysis.png/pdf**:
+   - Visually inspect equity curve progression from start to end
+   - Note if equity trends up/down/sideways over the period
+   - Identify any major drawdown periods or recovery phases
+
+2. **Cross-validate metrics vs visualization**:
+   - If metrics.json shows positive return but equity chart declines → HALT IMMEDIATELY
+   - If metrics.json shows negative return but equity chart rises → HALT IMMEDIATELY  
+   - If significant discrepancy detected → Set status to "FAILED - Accounting Error"
+
+3. **Open position verification**:
+   - Check bottom panel for open positions at period end
+   - If >5 open positions at end → Flag as "Incomplete Period - Validation Required"
+   - If >20% capital in open trades → Mandate unrealized P&L disclosure and validation
+
+### **Accounting Reconciliation (MANDATORY)**
+**Before accepting any performance metrics:**
+- Verify: `final_equity ≈ initial_capital × (1 + total_return)` within 1% tolerance
+- Cross-check: series.csv final value vs metrics.json calculation  
+- If mismatch >1% → ESCALATE to Builder with "Accounting Error" flag
+- Document all validation steps in evaluation report
+
 ## Performance Evaluation & Strategic Analysis Tasks
 
-### 1. **Performance Evaluation (Core Mission)**
+### 1. **Performance Evaluation (Core Mission - ONLY AFTER VALIDATION PASSES)**
 - **Assess Performance Quality**: Analyze all metrics from analyzer (CAGR, Sortino, Sharpe, MaxDD, etc.)
   - Is this good/bad/exceptional performance?
   - How does it compare to market benchmarks?
@@ -120,11 +147,20 @@ I need to use the **trading-single-evaluator** agent to perform comprehensive pe
 - **Web-researched best practices**: Industry-standard methodologies applied
 
 ## Success Criteria
-- Performance evaluation provides clear strategic insights
+- **MANDATORY**: Visual validation passes - equity chart consistent with numerical metrics
+- **MANDATORY**: Accounting reconciliation passes - all data sources consistent within 1% tolerance
+- **MANDATORY**: Open position assessment completed - any unrealized P&L properly disclosed
+- Performance evaluation provides clear strategic insights (ONLY after validation passes)
 - Statistical validation confirms result reliability
 - LaTeX PDF compiles successfully with professional formatting
 - Strategic recommendations are specific and actionable
 - Report ready for stakeholder review and decision-making
+
+## Halt Conditions (Do NOT Proceed)
+- Equity chart shows decline but metrics claim positive returns → STOP, escalate to Builder
+- Accounting mismatch >1% between data sources → STOP, flag "Accounting Error"
+- >20% capital in open positions without proper unrealized P&L assessment → FLAG for review
+- Any critical validation failure → Document issue and escalate appropriately
 
 ## Progress Reporting
 - **Unified progress bar**: `Evaluating strategy... ████████░░░░ 75% (~3 min remaining)`
